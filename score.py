@@ -226,7 +226,68 @@ if __name__ == "__main__":
 
 
 
+    """
+    #for transformer
+    x0 = gmm.sample(N)
+    t_list = torch.randint(1,2501,(N,))
+    t_temp = t_list/2500.0
+    w = torch.randn((N, 2))
+    temp = t_temp.repeat(2,1).T
+    xt = torch.exp(-temp) * x0 + torch.sqrt(1 - torch.exp(-2*temp)) * w
+    u = xt 
+    y = (x0 * torch.exp(-1*t_temp.reshape(-1,1)) - xt)/ (1 - torch.exp(-2*t_temp.reshape(-1,1)))
+    l_t =   torch.ones_like(t_list)#(1 - torch.exp(-2*t_temp))/2 
+    model = Transformer(2, 32, 4)
+print(sum(p.numel() for p in model.parameters() if p.requires_grad))
+optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=100)
+num_epochs = 100
+loss_list = torch.zeros(num_epochs)
 
+for i in tqdm.tqdm(range(num_epochs)):
+    ls = 0
+    for j in range(30):
+        batch = torch.randint(0, N, (500,))
+        u_b, y_b, l_tb,t_b = u[batch], y[batch], l_t[batch],t_list[batch]
+        optimizer.zero_grad()
+        y_pred = model(u_b,t_b)
+        l = loss(y_pred, y_b)
+        l.backward()
+        optimizer.step()
+        ls+=l.item()
+
+    loss_list[i] = ls/30
+    scheduler.step()
+
+    # Let us implement the reverse Euler-Maruyama scheme.
+model.eval()
+with torch.no_grad():
+    P = 500 # number of particles
+    y0 = torch.randn((P, 2), requires_grad=False)
+
+    N = 2500 # number of steps
+    T =  1 # final time
+    tau = T / N # step size
+
+    t = torch.Tensor([T])
+    beta = 0.1
+
+    const_temp1 = torch.Tensor([1+beta])
+    const_temp2 = torch.Tensor([tau * beta])
+
+    y = torch.zeros((P, 2, N+1), requires_grad=False)
+    for i in tqdm.tqdm(range(1,N)):
+        t_temp = torch.ones(P,dtype=torch.long)*(N-i)
+        eta_t = model(y[:,:,i],t_temp)
+        # ------------
+        # FILL THIS IN - START
+        # ------------
+        y[:,:,i+1] = y[:,:,i] + tau*(y[:,:,i] + (1+beta)*eta_t) + (2*tau*beta)**(0.5)*torch.normal(0,1,(P,2))
+        t -=  tau
+        # ------------
+        # FILL THIS IN - END
+    # ------------
+    """
 
 
 

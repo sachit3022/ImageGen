@@ -49,6 +49,7 @@ class GaussianMixture:
         return samples
     
     def get_gaussian_likelihood(self,x ,mu, sigma):
+        sigma = sigma.sqrt()
         return torch.exp(-0.5*(((x-mu)/sigma)**2).sum(dim=-1))/(2*math.pi*torch.prod(sigma))
 
     def rho0(self,samples):
