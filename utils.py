@@ -4,7 +4,23 @@
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+import random
+import torch
 
+
+def set_seed(seed):
+    np.random.seed(seed)
+    random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed(seed)
+
+def plot_loss(loss_list,filename):
+    sns.lineplot(x=range(len(loss_list)), y=loss_list)
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss')
+    plt.savefig(filename)
+
+# sample some data and plot the density
 def plot_density_from_samples(samples, filepath='gmm-density-samples.png', show=True, save=True):
     fig = plt.figure()
     sns.kdeplot(x=samples[:, 0], y=samples[:, 1], cmap="Reds", fill=True, thresh=0, bw_adjust=0.5)
