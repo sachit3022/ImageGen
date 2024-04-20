@@ -9,7 +9,7 @@ and $C_2$ are constants.
 
 We cannot used FD ( Frechet Distance ), which is a common metric for Images and it is not applicable in out case  as it assumes normality of the datapoints which is violated for GMMs.
 
-### KL Distance 
+### KL Measure 
 $$p_{estimate}(x) = \frac{1}{hN}\Sigma_i^N  K(\frac{x - x_i}{h})n$$
 $$q_{true}(x) = \Sigma \alpha_i \mathcal{N}(\mu_i, \sigma_i)$$
 $$KLD = KL(q||p)$$
@@ -37,7 +37,7 @@ $$\log p(x_t) \ge \mathop{\mathbb{E}}_{x_0} [\log p(x_t|x_0)*p(x_0)]$$
 $$\nabla_{x_t} \log p(x_t) \ge  \nabla_{x_t} \mathop{\mathbb{E}}_{x_0} [\log p(x_t|x_0)+ \log p(x_0)]$$
 $$\nabla_{x_t} \log p(x_t) \ge\mathop{\mathbb{E}}_{x_0} [  \nabla_{x_t} \log p(x_t|x_0)]$$
 
-Based on ELBO property we can replace the probabilty with the conditional probability and an expectation. 
+Based on ELBO property we can replace the probabilty with the conditional probability and an expectation.
 
 We can derive the same thing as derived in the score based or energy based models, levaraging for small $\sigma$, $E_{q\sigma}(f(\tilde{x}) - \nabla\log({q_\sigma{\tilde{x}}}) ) = E_{p}(f(x) - \nabla\log({p(x)}) )$ and from here we can show that the E can be relplaced with conditionals by re arranging terms.
 
@@ -45,7 +45,7 @@ We can derive the same thing as derived in the score based or energy based model
 What is the performance without learning as we have true distributions p(x_t), we can have score in closed form and we can generate samples from these distributions. This will serve as a benchmark to aim at.
 <center>
 
-| Sampling   |   KL measure |
+| Sampling   |    KL Measure |
 |----------|:-------------:|
 | p(x) |  25.13 |
 
@@ -84,6 +84,7 @@ $$x_t = e^{-t}x_0 + \sqrt{1- e^{-2t}} \epsilon$$
 It can be shown the DDPM is shown as 
 
 $$f(x_t,t) = \frac{-\beta_t}{2}, g(t) = \sqrt{\beta_t}$$
+
 $$x_t =  \sqrt{1- \alpha_t}x_0 + \sqrt{\alpha_t} \epsilon$$
 
 We can try multiple different $f(x_t,t),g(t)$ However, I donot have background in solving SDE. So  Here we show that using DDPM will improve the KLD metric.
@@ -123,7 +124,7 @@ We can vary the size af the models and also bring changes to the architecture, W
     <tr>
       <th>Diffusion process</th>
       <th>Score weight</th>
-      <th>KLD metric</th>
+      <th> KL Measure </th>
     </tr>
     <tr>
       <td>FwdOrnstein-Uhlenbeck</td>
