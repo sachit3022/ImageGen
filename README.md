@@ -18,8 +18,6 @@ where K is any kernel, here we assume gaussian kernel for simplicity. Here the i
 Why are the generative model papers not using this metric. Here we are making huge assumption of estimating likelihood by kernel density. This holds only true for large sample size. For our example as it is a toy data this suits the purpose and we have a large sample size.
 
 
-## VAE & Hierachial VAE & Learned variance DDPM
-
 ## Score based models & DDPM
 
 
@@ -31,6 +29,8 @@ We can have any function f and g and solve the SDE in the forward and then sampl
 
 Generally, we dont have the closed form for $\nabla_{x_t}\log p_t(x_t)$, In this example we have because we know the distribution of $x_0$, which is mixture of gaussian and the also $x_t = x_0  \ast \mathcal{N}(\mu,\sigma)$. However, we wil assume general case in which the distribution of $x_0$ is unknown, for such cases  $\nabla_{x_t}\log p_t(x_t)$ is not tractable.
 
+
+
 One advantage we have is $p(x_t|x_0)$ is tractable.
 $$\log p(x_t) = \log \mathop{\mathbb{E}}_{x_0} p(x_t|x_0)*p(x_0)$$
 $$\log p(x_t) \ge \mathop{\mathbb{E}}_{x_0} [\log p(x_t|x_0)*p(x_0)]$$
@@ -39,10 +39,28 @@ $$\nabla_{x_t} \log p(x_t) \ge\mathop{\mathbb{E}}_{x_0} [  \nabla_{x_t} \log p(x
 
 Based on ELBO property we can replace the probabilty with the conditional probability and an expectation. 
 
+We can derive the same thing as derived in the score based or energy based models, levaraging for small $\sigma$, $E_{q\sigma}(f(\tilde{x}) - \nabla\log({q_\sigma{\tilde{x}}}) ) = E_{p}(f(x) - \nabla\log({p(x)}) )$ and from here we can show that the E can be relplaced with conditionals by re arranging terms.
+
+
+What is the performance without learning as we have true distributions p(x_t), we can have score in closed form and we can generate samples from these distributions. This will serve as a benchmark to aim at.
+<center>
+
+| Sampling   |   KL measure |
+|----------|:-------------:|
+| p(x) |  25.13 |
+
+</center>
+
+
+
 Now we know the closed form of the conditional in forward pass and in the reverse direction we replace $\nabla_{x_t}\log p_t(x_t)$ with $s_{\theta}(x,t)$.
+
 
 During training we train with a score matching loss
 $$L = \mathop{\mathbb{E}}_{x_0}\mathop{\mathbb{E}}_{t \sim U[0,T]} [\lambda(t)||s_{\theta}(x,t) -\nabla_{x_t}\log p_t(x_t)||_2^2 ]$$
+
+
+
 
 Where can Improvements come from? 
 
@@ -145,10 +163,14 @@ The final distribution plot across different settings along with ground truth.
     </tr>
 </table>
 
+## VAE & Hierachial VAE & Learned variance DDPM
 
 
 
+### Future work
 
+1. Implement Hypenetworks condition on sinusodial time embeddings.
+2. Work on conditional generation of mode.
 
 ### References
 1. Chan, S. H. (2024). Tutorial on Diffusion Models for Imaging and Vision. arXiv preprint arXiv:2403.18103. https://arxiv.org/pdf/2403.18103.pdf.
