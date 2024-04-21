@@ -117,6 +117,7 @@ We can vary the size of the models and also bring changes to the architecture. W
 
 Transformers are not ideal for this dataset as there is no contextual dependency. However, we hypothesize that Hypernetworks are a better choice for this task. Due to time constraints, we could not perform experiments on them.
 
+We will not discuss this to grater extent because the improvements are very straght forward from the best practices. avaible on models.py
 
 ## Results 
 
@@ -140,12 +141,12 @@ Transformers are not ideal for this dataset as there is no contextual dependency
     <tr>
       <td>DDPM</td>
       <td>Uniform</td>
-      <td><b>28.04</\b></td>
+      <td>31.14</td>
     </tr>
     <tr>
       <td>DDPM</td>
       <td>Inv Variance Schedule</td>
-      <td>28.62</td>
+      <td><b>29.51</b></td>
     </tr>
   </table>
 </p>
@@ -174,9 +175,9 @@ We will derive closed-form for 8 categorical latent using Gumbel softmax reparam
 VAE does importance sampling, where the encoder will encode the sample to the latent distribution. Will all the samples from a mode map to a category in the latent space? The answer is no. This implies that VAE does not learn the causal underpinnings.
 
 
-
-
 ### How to run the experiments
+
+Please do run the score.py for best performance and final plot as the base model under given conditions performance poorly ( KL measure of 61.0 compared to our 29.51), we improve it based on the above discussed methods.
 
 `python score.py`
 

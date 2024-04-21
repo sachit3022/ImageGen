@@ -46,7 +46,7 @@ class ScoreBasedModelling:
         t_nn = (t_list - t_list.min()) / (t_list.max() - t_list.min())
         t_nn = 2 * t_nn - 1
         ut = torch.hstack([xt, t_nn[:,None]])
-        l_t = (1 - torch.exp(-2*t_list))/2 #l_t = torch.ones_like(t_list) # self.one_minus_alpha_t_bar[t_index] #self.one_minus_alpha_t_bar[t_index] #self.one_minus_alpha_t_bar[t_index]
+        l_t = self.one_minus_alpha_t_bar[t_index] # self.one_minus_alpha_t_bar[t_index]  #self.one_minus_alpha_t_bar[t_index] (1 - torch.exp(-2*t_list))/2 
         
         return ut, y,l_t
     
@@ -185,8 +185,8 @@ if __name__ == "__main__":
     set_seed(42)
 
     sampler = GaussianMixture(k=8)
-    diff_process  = FwdOrnsteinUhlenbeckProcess(N_steps,tspan)
-    #diff_process = DDPMProcess(N_steps,tspan)
+    #diff_process  = FwdOrnsteinUhlenbeckProcess(N_steps,tspan)
+    diff_process = DDPMProcess(N_steps,tspan)
     
     
     ########## Generate samples ##########
